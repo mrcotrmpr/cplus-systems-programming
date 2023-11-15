@@ -1,10 +1,19 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.8)
 
 project(assignment-1)
 
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ./src/*.cpp)
-file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ./include/*.hpp)
+if (WIN32 OR WIN64)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})	
+include_directories(lib)
+add_subdirectory(lib)
 
-target_include_directories(assignment-1 PUBLIC include)
+add_custom_target(copy_dlls COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/lib/lib-shared.dll ${CMAKE_CURRENT_BINARY_DIR})
+
+add_executable(${PROJECT_NAME}-static main.cpp)
+target_link_libraries(${PROJECT_NAME}-static PRIVATE lib-static)
+
+add_executable(${PROJECT_NAME}-shared main.cpp)
+target_link_libraries(${PROJECT_NAME}-shared PRIVATE lib-shared)
+add_dependencies(${PROJECT_NAME}-shared copy_dlls)
