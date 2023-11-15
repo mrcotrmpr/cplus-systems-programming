@@ -1,47 +1,43 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
+#include "string"
+
 #include "lib/include/split_join.hpp"
 #include "lib/include/random_generator.hpp"
 
 int main() {
-    // Split based on space
-    std::string sentence {"In this sentence there are seven words."};
-    std::vector<std::string> words {sp::split(sentence, " ")};
-    for (const auto& word : words) {
-        std::cout << word << '\n';
+    std::ifstream file("data/Alice_in_Wonderland.txt");
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(file, line)) {
+        lines.push_back(line);
     }
 
-    // Join with hyphen
-    std::cout << sp::join(words, "-") << '\n';
+    lines = rg::choose_random_items(lines, 10);
 
-    // Split based on regular expression
-    std::string text {"123.456,789#012"};
-    std::regex pattern {R"([.,#])"}; // R"()" is a raw string
-    for (const auto& part : sp::split(text, pattern)) {
-        std::cout << part << ' ';
+    std::regex pat{R"([^[:alpha:]]+)"};
+    std::map<std::string, int> wordCounts{};
+
+    for (const auto& line : lines)
+    {
+        for (const auto& word : sp::split(line, pat))
+        {
+            if (wordCounts.find(word) == wordCounts.end()) {
+                wordCounts[word] = 1;
+            }
+            else {
+                wordCounts[word]++;
+            }
+        }
     }
-    std::cout << '\n';
 
-    std::shared_ptr<RandomGenerator> randomGenerator = std::make_shared<RandomGenerator>();
+    for (const auto& pair : wordCounts) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
 
-    int testInt = randomGenerator->generate_random_int(1, 10);
-    std::cout << "Random integer: " << testInt << std::endl;
-
-    double testDouble = randomGenerator->generate_random_double(1.0, 10.0);
-    std::cout << "Random double: " << testDouble << std::endl;
-
-    double testDoubleZeroToOne = randomGenerator->generate_double_zero_to_one();
-    std::cout << "Random double between 0 and 1: " << testDoubleZeroToOne << std::endl;
-
-    bool testBool = randomGenerator->generate_random_bool();
-    std::cout << "Random bool: " << (testBool ? "true" : "false") << std::endl;
-
-    std::vector<char> stringVector = { 'A', 'B', 'C', 'D', 'E' };
-    char randomChar = randomGenerator->choose_random_item(stringVector);
-    std::cout << "Random item from string vector: " << randomChar << std::endl;
-
-    std::vector<int> intVector = { 1, 2, 3, 4, 5, 6 };
-    int randomInt = randomGenerator->choose_random_item(intVector);
-    std::cout << "Random item from int vector: " << randomInt << std::endl;
-
-	return 0;
+    return 0;
 }

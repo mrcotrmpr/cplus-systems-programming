@@ -9,10 +9,14 @@ endif ()
 include_directories(lib)
 add_subdirectory(lib)
 
+add_custom_target(copy_data COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+
 add_executable(${PROJECT_NAME}-static main.cpp)
+add_dependencies(${PROJECT_NAME}-static copy_data)
 target_link_libraries(${PROJECT_NAME}-static PRIVATE lib-static)
 
 add_executable(${PROJECT_NAME}-shared main.cpp)
+add_dependencies(${PROJECT_NAME}-shared copy_data)
 target_link_libraries(${PROJECT_NAME}-shared PRIVATE lib-shared)
 
 if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/lib/lib-shared.dll)
