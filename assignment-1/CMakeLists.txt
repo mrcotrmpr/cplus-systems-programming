@@ -11,7 +11,20 @@ add_subdirectory(lib)
 
 add_custom_target(copy_data COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
 
-add_executable(${PROJECT_NAME} main.cpp)
-add_dependencies(${PROJECT_NAME} copy_data)
+add_executable(${PROJECT_NAME}-static main.cpp)
+add_dependencies(${PROJECT_NAME}-static copy_data)
+target_link_libraries(${PROJECT_NAME}-static PRIVATE lib-static)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE lib-static lib-shared)
+add_executable(${PROJECT_NAME}-shared main.cpp)
+add_dependencies(${PROJECT_NAME}-shared copy_data)
+target_link_libraries(${PROJECT_NAME}-shared PRIVATE lib-shared)
+
+if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/lib/lib-shared.dll)
+    add_custom_command(
+        TARGET ${PROJECT_NAME}-shared
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_BINARY_DIR}/lib/lib-shared.dll
+                ${CMAKE_CURRENT_BINARY_DIR}
+    )
+endif()
