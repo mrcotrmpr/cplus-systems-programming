@@ -8,6 +8,7 @@ public:
 	virtual ~IPlugin() = default;
 	virtual std::string name() const = 0;
 	virtual std::string description() const = 0;
+	virtual std::string handle(const std::string& text) const = 0;
 };
 
 #endif // IPLUGIN_HPP

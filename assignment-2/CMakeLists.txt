@@ -11,4 +11,7 @@ add_subdirectory(plugins)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
+add_custom_target(copy_data COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+add_dependencies(${PROJECT_NAME} copy_data)
+
 target_include_directories(assignment-2 PUBLIC include)
