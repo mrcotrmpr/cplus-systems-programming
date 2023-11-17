@@ -33,29 +33,24 @@ std::string process_text(const std::vector<std::unique_ptr<IPlugin>>& plugins, c
     while (std::getline(inputFile, line)) {
         inputText += line + '\n';
     }
+    inputFile.close();
 
     for (size_t i = 0; i < plugins.size(); ++i) {
         if (pluginStatus[i]) {
             inputText = plugins[i]->handle(inputText);
         }
     }
-
-    inputFile.close();
     return inputText;
 }
 
-int main(int argc, char* argv[]) {
+int main() {
     try {
-        // (1) Scan directory for plugin files
-        std::vector<std::string> files {scan_dir("plugins", "plug")};
-
-        // (2) Load the plugins
+        std::vector<std::string> files = scan_dir("plugins", "plug");
         std::vector<PluginWrapper> pluginWrappers;
         for (const std::string& file : files) {
             pluginWrappers.emplace_back(file);
         }
 
-        // (3) Instantiate plugin objects
         using factory = IPlugin * (*)();
         std::vector<std::unique_ptr<IPlugin>> plugins;
         for (const PluginWrapper& wrapper : pluginWrappers) {
@@ -63,9 +58,8 @@ int main(int argc, char* argv[]) {
             plugins.emplace_back(func());
         }
 
-        // (4) Handle input
         std::vector<bool> pluginStatus(plugins.size(), true);
-        bool text_processed = false;
+        bool textProcessed = false;
 
         char choice;
         do {
@@ -78,18 +72,12 @@ int main(int argc, char* argv[]) {
                 if (index < plugins.size()) {
                     pluginStatus[index] = !pluginStatus[index];
                 }
-                else {
-                    // Invalid index
-                }
             }
             else if (choice == 'e') {
                 std::cout << process_text(plugins, pluginStatus) << std::endl;
-                text_processed = true;
+                textProcessed = true;
             }
-            else {
-                // Invalid input
-            }
-        } while (!text_processed);
+        } while (!textProcessed);
 
     }
     catch (const std::exception& ex) {
