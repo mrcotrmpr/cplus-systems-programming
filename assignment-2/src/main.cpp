@@ -59,7 +59,7 @@ int main() {
         }
 
         std::vector<bool> pluginStatus(plugins.size(), true);
-        bool textProcessed = false;
+        bool text_processed = false;
 
         char choice;
         do {
@@ -75,9 +75,9 @@ int main() {
             }
             else if (choice == 'e') {
                 std::cout << process_text(plugins, pluginStatus) << std::endl;
-                textProcessed = true;
+                text_processed = true;
             }
-        } while (!textProcessed);
+        } while (!text_processed);
 
     }
     catch (const std::exception& ex) {
