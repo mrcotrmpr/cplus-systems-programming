@@ -8,7 +8,6 @@ namespace rg {
     double generate_random_double(double lower, double upper);
     double generate_double_zero_to_one();
     bool generate_random_bool();
-
     std::default_random_engine& engine = RandomEngineManager::get_instance().get_engine();
 
     template <typename T>

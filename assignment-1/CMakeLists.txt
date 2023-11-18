@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.20)
 
 project(assignment-1)
+
+set(CMAKE_CXX_STANDARD 20)
 
 if (WIN32 OR WIN64)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
