@@ -12,7 +12,7 @@ Creating a plugin architecture
 
 ## Assignment 3
 
-Creating an application which starts multiple processes
+Start a child process and check if it exits normally
 
 ## Assignment 4
 
