@@ -28,6 +28,7 @@ void display_plugins(const std::vector<std::unique_ptr<IPlugin>>& plugins, const
 }
 
 std::string process_text(const std::vector<std::unique_ptr<IPlugin>>& plugins, const std::vector<bool>& pluginStatus) {
+    system("cls");
     std::ifstream inputFile("data/input.txt");
     std::string inputText, line;
     while (std::getline(inputFile, line)) {
@@ -84,6 +85,5 @@ int main() {
         std::cerr << ex.what() << std::endl;
         return 1;
     }
-
     return 0;
 }

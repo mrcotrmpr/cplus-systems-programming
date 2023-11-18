@@ -1,5 +1,5 @@
-#ifndef PLUGINWRAPPER_HPP
-#define PLUGINWRAPPER_HPP
+#ifndef PLUGIN_WRAPPER_HPP
+#define PLUGIN_WRAPPER_HPP
 
 #include <string>
 
@@ -24,4 +24,4 @@ private:
     void move(PluginWrapper&& other);
 };
 
-#endif // PLUGINWRAPPER_HPP
+#endif // PLUGIN_WRAPPER_HPP
