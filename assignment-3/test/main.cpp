@@ -19,7 +19,10 @@ int main(int argc, char* argv[]) {
             factory func = reinterpret_cast<factory>(wrapper.lookup("create_instance"));
 
             std::unique_ptr<IPlugin> plugin{func()};
-            std::cout << "Plugin: " << plugin->name() << std::endl;
+
+            std::cout << "Name: " << plugin->name() << std::endl;
+            std::cout << "Description: " << plugin->description() << std::endl;
+            std::string test = plugin->handle("This is a test");
         }
     }
     catch (const std::exception& ex) {
