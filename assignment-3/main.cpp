@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 
 	// Command line arg for CreateProcess *must* be writable
 	std::vector<char> path(1024);
-	std::strcpy(path.data(), "test/test.exe testplugin.plug");
+	std::strcpy(path.data(), "test/test.exe success_plugin.plug fail_plugin.plug");
 
 	// Start the child process.
 	if (!CreateProcess(

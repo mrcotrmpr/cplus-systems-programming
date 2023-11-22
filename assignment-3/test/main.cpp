@@ -9,15 +9,22 @@
 #include "iplugin.hpp"
 
 int main(int argc, char* argv[]) {
-	try {
-		using factory = IPlugin* (*)();
-		PluginWrapper wrapper{"plugins/" + std::string(argv[1])};
-		factory func = reinterpret_cast<factory>(wrapper.lookup("create_instance"));
-		std::unique_ptr<IPlugin> plugin{func()};
+    try {
+        std::string pluginsDirectory = "plugins/";
+        for (int i = 1; i < argc; ++i) {
+            std::string pluginPath = pluginsDirectory + std::string(argv[i]);
 
-		std::cout << "Plugin: " << plugin->name() << std::endl;
-	}
-	catch (const std::exception& ex) {
-		std::cout << ex.what() << std::endl;
-	}
+            PluginWrapper wrapper{ pluginPath };
+            using factory = IPlugin * (*)();
+            factory func = reinterpret_cast<factory>(wrapper.lookup("create_instance"));
+
+            std::unique_ptr<IPlugin> plugin{func()};
+            std::cout << "Plugin: " << plugin->name() << std::endl;
+        }
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "Exception: " << ex.what() << std::endl;
+    }
+
+    return 0;
 }
