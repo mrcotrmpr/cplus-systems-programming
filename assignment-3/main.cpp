@@ -3,7 +3,7 @@
 #include <cstring>
 #include <windows.h>
 
-int main() {
+int main(int argc, char* argv[]) {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
@@ -13,10 +13,11 @@ int main() {
 
 	// Command line arg for CreateProcess *must* be writable
 	std::vector<char> path(1024);
-	std::strcpy(path.data(), "sample/sample.exe");
+	std::strcpy(path.data(), "test/test.exe testplugin.plug");
 
 	// Start the child process.
-	if (!CreateProcess(nullptr, // No module name (use command line)
+	if (!CreateProcess(
+		nullptr, // No module name (use command line)
 		path.data(), // Command line
 		nullptr, // Process handle not inheritable
 		nullptr, // Thread handle not inheritable
@@ -35,7 +36,7 @@ int main() {
 	// Wait until child process exits.
 	WaitForSingleObject(pi.hProcess, INFINITE);
 	DWORD status;
-	if (GetExitCodeProcess(pi.hProcess, &status)) {
+	if (GetExitCodeProcess(pi.hProcess, &status) && status == 0) {
 		std::cerr << "child process exited normally\n";
 	}
 	else {

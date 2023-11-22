@@ -4,6 +4,7 @@ project (assignment-3)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(sample)
+add_subdirectory(test)
+add_subdirectory(plugins)
 
 add_executable(${PROJECT_NAME} main.cpp)
