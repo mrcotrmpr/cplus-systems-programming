@@ -29,11 +29,10 @@ void read(std::string file_name) {
 }
 
 void clear() {
-    std::ofstream file1(FILE_ONE, std::ofstream::trunc);
-    file1.close();
-
-    std::ofstream file2(FILE_TWO, std::ofstream::trunc);
-    file2.close();
+    for (const std::string& fileName : { FILE_ONE, FILE_TWO }) {
+        std::ofstream file(fileName, std::ofstream::trunc);
+        file.close();
+    }
 }
 
 void file_operations() {
