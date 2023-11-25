@@ -16,7 +16,7 @@ public:
 
     void write(const std::string& content);
     void read();
-    std::unique_lock<std::mutex> lock();
+    std::lock_guard<std::mutex> lock();
     void clear();
 };
 
