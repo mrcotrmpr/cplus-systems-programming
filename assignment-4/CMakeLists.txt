@@ -4,4 +4,9 @@ project(assignment-4)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(${PROJECT_NAME} main.cpp)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ./src/*.cpp)
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ./include/*.hpp)
+
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})	
+
+target_include_directories(assignment-4 PUBLIC include)
