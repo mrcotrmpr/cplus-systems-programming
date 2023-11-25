@@ -14,9 +14,10 @@ private:
 public:
     FileHandler(const std::string& filename);
 
+    std::mutex& get_mutex() { return file_mutex; }
+
     void write(const std::string& content);
     void read();
-    std::lock_guard<std::mutex> lock();
     void clear();
 };
 

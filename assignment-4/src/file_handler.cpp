@@ -16,10 +16,6 @@ void FileHandler::read() {
     std::cout << '\n';
 }
 
-std::lock_guard<std::mutex> FileHandler::lock() {
-    return std::lock_guard<std::mutex>{file_mutex};
-}
-
 void FileHandler::clear() {
     std::ofstream file(file_name, std::ofstream::trunc);
 }
