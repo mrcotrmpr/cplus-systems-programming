@@ -4,12 +4,12 @@
 #include <mutex>
 #include <string>
 
-const std::string FILE_ONE = "shared_file-1.txt";
-const std::string FILE_TWO = "shared_file-2.txt";
+const std::string FILE_ONE = "shared_file_1.txt";
+const std::string FILE_TWO = "shared_file_2.txt";
 std::mutex fileMutex;
 
 void write(std::string file_name) {
-    std::unique_lock<std::mutex> lock(fileMutex);
+    std::lock_guard <std::mutex> lock(fileMutex);
 
     std::ofstream file(file_name, std::ios::app);
     file << "This is a line written by thread: " << std::this_thread::get_id() << std::endl;
@@ -17,7 +17,7 @@ void write(std::string file_name) {
 }
 
 void read(std::string file_name) {
-    std::unique_lock<std::mutex> lock(fileMutex);
+    std::lock_guard <std::mutex> lock(fileMutex);
 
     std::ifstream file(file_name);
     std::string content;
