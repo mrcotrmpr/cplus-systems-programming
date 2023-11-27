@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <random>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -7,6 +9,18 @@
 #include "throw.hpp"
 
 int main() {
+    // initialize words
+    std::ifstream file("data/nl.words.txt");
+    std::vector<std::string> words;
+    std::string word;
+    while (file >> word) {
+        words.push_back(word);
+    }
+
+    // initialize random engine
+    std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
+    std::uniform_int_distribution<size_t> distribution(0, words.size() - 1);
+
     try {
         // create stream socket
         int server{ 0 };
@@ -49,8 +63,8 @@ int main() {
                 << ntohs(addr->sin_port) << std::endl;
 
             // send static string to the client
-            const char* message = "static string";
-            throw_if_min1(send(client, message, strlen(message), 0));
+            std::string word = words[distribution(rng)];
+            throw_if_min1(send(client, word.c_str(), word.size(), 0));
 
             // close the connection
             throw_if_min1(closesocket(client));
