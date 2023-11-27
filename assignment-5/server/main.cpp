@@ -5,8 +5,22 @@
 #include <vector>
 #include <stdexcept>
 #include <cstring>
+#include <thread>
 #include "networking.hpp"
 #include "throw.hpp"
+
+void handle_client(int clientSocket, std::vector<std::string> words) {
+    try {
+        std::string word = "static";
+        throw_if_min1(send(clientSocket, word.c_str(), word.size(), 0));
+
+        throw_if_min1(closesocket(clientSocket));
+        std::cerr << "server: closed connection from thread: " << std::this_thread::get_id() << '\n';
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "server: " << ex.what() << '\n';
+    }
+}
 
 int main() {
     // initialize words
@@ -16,10 +30,6 @@ int main() {
     while (file >> word) {
         words.push_back(word);
     }
-
-    // initialize random engine
-    std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
-    std::uniform_int_distribution<size_t> distribution(0, words.size() - 1);
 
     try {
         // create stream socket
@@ -62,13 +72,9 @@ int main() {
             std::cerr << "server: got connection from " << cbuf.data() << ":"
                 << ntohs(addr->sin_port) << std::endl;
 
-            // send static string to the client
-            std::string word = words[distribution(rng)];
-            throw_if_min1(send(client, word.c_str(), word.size(), 0));
-
-            // close the connection
-            throw_if_min1(closesocket(client));
-            std::cerr << "server: closed connection " << std::endl;
+            // start a new thread to handle this client
+            std::thread client_thread(handle_client, client, words);
+            client_thread.detach();
         }
         throw_if_min1(closesocket(server));
 

@@ -8,7 +8,7 @@ std::string read_line(int sock) {
     std::string result;
     char c{};
     int n{ 0 };
-    while ((n = recv(sock, &c, 1, 0) != 0) && c != '\n') {
+    while ((n = recv(sock, &c, 1, 0)) > 0 && c != '\n') {
         throw_if_min1(n);
         result += c;
     }
