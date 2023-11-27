@@ -9,9 +9,11 @@
 #include "networking.hpp"
 #include "throw.hpp"
 
-void handle_client(int clientSocket, std::vector<std::string> words) {
+void handle_client(int clientSocket, std::vector<std::string> words, std::shared_ptr<std::mt19937> rng) {
     try {
-        std::string word = "static";
+        std::uniform_int_distribution<size_t> distribution(0, words.size() - 1);
+        std::string word = words[distribution(*rng)];
+
         throw_if_min1(send(clientSocket, word.c_str(), word.size(), 0));
 
         throw_if_min1(closesocket(clientSocket));
@@ -30,6 +32,9 @@ int main() {
     while (file >> word) {
         words.push_back(word);
     }
+
+    // initialize shared random engine
+    auto rng = std::make_shared<std::mt19937>(std::random_device{}());
 
     try {
         // create stream socket
@@ -73,7 +78,7 @@ int main() {
                 << ntohs(addr->sin_port) << std::endl;
 
             // start a new thread to handle this client
-            std::thread client_thread(handle_client, client, words);
+            std::thread client_thread(handle_client, client, words, rng);
             client_thread.detach();
         }
         throw_if_min1(closesocket(server));
