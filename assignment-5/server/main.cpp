@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -49,18 +48,13 @@ int main() {
             std::cerr << "server: got connection from " << cbuf.data() << ":"
                 << ntohs(addr->sin_port) << std::endl;
 
-            // read data from client
-            std::vector<char> buf(1024);
-            int n{ 0 };
-            while ((n = recv(client, buf.data(), buf.size(), 0)) != 0) {
-                throw_if_min1(n);
-                std::cerr << "server: read " << n << " bytes from client\n";
+            // send static string to the client
+            const char* message = "static string";
+            throw_if_min1(send(client, message, strlen(message), 0));
 
-                // echo data back to client
-                throw_if_min1(send(client, buf.data(), n, 0));
-            }
-            std::cerr << "server: connection closed by client\n";
+            // close the connection
             throw_if_min1(closesocket(client));
+            std::cerr << "server: closed connection " << std::endl;
         }
         throw_if_min1(closesocket(server));
 

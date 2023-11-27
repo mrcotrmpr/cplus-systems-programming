@@ -33,16 +33,10 @@ int main() {
             reinterpret_cast<struct sockaddr*>(&sa),
             sizeof(sa)));
 
-        // read user input and send it to server
-        std::string line;
-        while (getline(std::cin, line)) {
-            line += '\n';
-            throw_if_min1(send(server, line.c_str(), line.size(), 0));
+        // read the message from the server
+        std::string resp = read_line(server);
+        std::cout << "client: received from server: " << resp << std::endl;
 
-            // show server response
-            std::string resp {read_line(server)};
-            std::cout << "client: server echoed: " << resp << std::endl;
-        }
         // cleanup
         throw_if_min1(closesocket(server));
 
