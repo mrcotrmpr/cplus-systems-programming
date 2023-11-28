@@ -11,6 +11,18 @@
 
 void handle_client(int clientSocket, std::string word) {
     try {
+        std::vector<char> buf(1024);
+        int n{ 0 };
+
+        // read and print the data received from the client
+        while ((n = recv(clientSocket, buf.data(), buf.size(), 0)) > 0) {
+            std::cerr << "server: received from client: ";
+            for (int i = 0; i < n; ++i) {
+                std::cerr << buf[i];
+            }
+            break;
+        }
+
         throw_if_min1(send(clientSocket, word.c_str(), word.size(), 0));
 
         throw_if_min1(closesocket(clientSocket));
